@@ -23,5 +23,11 @@ def bubbleSort(lst):
 
 
 def main():
-    lst = [2, 3, 2, 5, 6, 1]()
+    lst = [2, 3, 2, 5, 6, 1, -2, 3, 14, 12]
+    bubbleSort(lst)
+    for v in lst:
+        print(v, end=" ")
+
+main()
+
 
