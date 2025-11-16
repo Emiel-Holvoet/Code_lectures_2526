@@ -1,68 +1,76 @@
 class Heap:
     def __init__(self):
-        self.__lst = []
+        self.__lst = []                   # Interne lijst voor de heap (complete binaire boom)
 
-    # Add a new item into the lst 
+    # -----------------------------------------
+    # Add a new item into the heap
+    # -----------------------------------------
     def add(self, e):
-        self.__lst.append(e)  # Append to the lst
-        # The index of the last node
-        currentIndex = len(self.__lst) - 1  
-    
+        self.__lst.append(e)              # Voeg element onderaan (laatste plek) toe
+        currentIndex = len(self.__lst) - 1  # Index van nieuw element
+
+        # "Percolate up" → naar boven schuiven zolang het groter is dan de ouder
         while currentIndex > 0:
-            parentIndex = (currentIndex - 1) // 2
-            # Swap if the current item is greater than its parent
-            if self.__lst[currentIndex] > self.__lst[parentIndex]: 
+            parentIndex = (currentIndex - 1) // 2  # Index van ouder in heap-structuur
+
+            # Als huidig element groter is dan zijn ouder → swap
+            if self.__lst[currentIndex] > self.__lst[parentIndex]:
                 self.__lst[currentIndex], self.__lst[parentIndex] = \
                     self.__lst[parentIndex], self.__lst[currentIndex]
             else:
-                break  # The tree is a lst now
-    
-            currentIndex = parentIndex
+                break                       # Heap-eigenschap is hersteld
 
-    # Remove the root from the lst 
+            currentIndex = parentIndex      # Ga verder omhoog
+
+
+    # -----------------------------------------
+    # Remove the max element (root) from the heap
+    # -----------------------------------------
     def remove(self):
         if len(self.__lst) == 0:
-            return None
-    
-        removedItem = self.__lst[0]
-        self.__lst[0] = self.__lst[len(self.__lst) - 1]
-        self.__lst.pop(len(self.__lst) - 1) # Remove the last item
-    
+            return None                     # Lege heap → niets te verwijderen
+
+        removedItem = self.__lst[0]         # Grootste element (root)
+        self.__lst[0] = self.__lst[-1]      # Verplaats laatste element naar de top
+        self.__lst.pop()                    # Verwijder laatste element
+
+        # "Percolate down" → grote elementen bovenaan duwen
         currentIndex = 0
         while currentIndex < len(self.__lst):
+
             leftChildIndex = 2 * currentIndex + 1
             rightChildIndex = 2 * currentIndex + 2
-          
-            # Find the maximum between two children
-            if leftChildIndex >= len(self.__lst): 
-                break  # The tree is a lst
+
+            # Als er geen linker kind is → we zitten onderaan de boom
+            if leftChildIndex >= len(self.__lst):
+                break
+
+            # Kies de grootste van de twee kinderen
             maxIndex = leftChildIndex
             if rightChildIndex < len(self.__lst):
-                if self.__lst[maxIndex] < self.__lst[rightChildIndex]:
+                if self.__lst[rightChildIndex] > self.__lst[maxIndex]:
                     maxIndex = rightChildIndex
-          
-            # Swap if the current node is less than the maximum 
+
+            # Als ouder kleiner is dan de grootste van de kinderen → swap
             if self.__lst[currentIndex] < self.__lst[maxIndex]:
-                self.__lst[maxIndex], self.__lst[currentIndex] = \
-                    self.__lst[currentIndex], self.__lst[maxIndex]
-                currentIndex = maxIndex
+                self.__lst[currentIndex], self.__lst[maxIndex] = \
+                    self.__lst[maxIndex], self.__lst[currentIndex]
+                currentIndex = maxIndex     # Ga verder naar beneden
             else:
-                break  # The tree is a lst
-    
-        return removedItem
-  
-    # Returns the size of the heap
+                break                       # Heap-eigenschap is hersteld
+
+        return removedItem                  # Return het verwijderde max-element
+
+
+    # ----------------- EXTRA METHODS ---------------------
     def getSize(self):
         return len(self.__lst)
 
-    # Returns True if the heap is empty
     def isEmpty(self):
         return self.getSize() == 0
 
-    # Returns the largest element in the heap without removing it
     def peek(self):
-        return self.__lst[0]
-        
-    # Returns the list in the heap
+        return self.__lst[0]                # Grootste element (root)
+
     def getLst(self):
-        return self.__lst
+        return self.__lst                   # Volledige interne lijst
